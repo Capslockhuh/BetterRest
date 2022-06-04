@@ -45,6 +45,15 @@ struct ContentView: View {
                 Section {
                 Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 0...20)
                 }
+                
+                Section {
+                    Text("Calculated bedtime:")
+                        .font(.headline)
+                        .foregroundColor(.green)
+                    Text(alertMessage)
+                } header: {
+                    Text("Click 'Calculate' to see your calculated bedtime")
+                }
                     .alert(alertTitle, isPresented: $showingAlert) {
                         Button("Ok") { }
                     } message: {
@@ -54,6 +63,7 @@ struct ContentView: View {
             .navigationTitle("BetterRest")
             .toolbar {
                 Button("Calculate", action: calculateBedTime)
+                    .foregroundColor(.green)
             }
         }
     }
