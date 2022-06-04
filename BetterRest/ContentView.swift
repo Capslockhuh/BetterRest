@@ -31,6 +31,12 @@ struct ContentView: View {
                 Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
                 
                 Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 0...20)
+                
+                    .alert(alertTitle, isPresented: $showingAlert) {
+                        Button("Ok") { }
+                    } message: {
+                        Text(alertMessage)
+                    }
             }
             .navigationTitle("BetterRest")
             .toolbar {
@@ -56,7 +62,12 @@ struct ContentView: View {
             
             // Calculate the sleep time
             let sleepTime = wakeUp - prediction.actualSleep
+            
+            // Show a succesful alert
+            alertTitle = "Your ideal bedtime is..."
+            alertMessage = sleepTime.formatted(date: .omitted, time: .shortened)
         } catch {
+            // Show an error alert
             alertTitle = "Error"
             alertMessage = "Sorry, there was a problem calculating your bedtime"
         }
