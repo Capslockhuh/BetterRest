@@ -9,7 +9,7 @@ import CoreML
 import SwiftUI
 
 struct ContentView: View {
-    @State private var wakeUp = Date.now
+    @State private var wakeUp = defaultWakeTime
     @State private var sleepAmount = 8.0
     @State private var coffeeAmount = 1
     
@@ -17,21 +17,35 @@ struct ContentView: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingAlert = false
+    
+    // Sets the default wake time to 7 am current day.
+    static var defaultWakeTime: Date {
+        var components = DateComponents()
+        components.hour = 7
+        components.minute = 0
+        return Calendar.current.date(from: components) ?? Date.now
+    }
+    
     var body: some View {
         NavigationView {
-            VStack {
+            Form {
+                VStack(alignment: .leading, spacing: 0) {
                 Text("When do you want to wake up?")
                     .font(.headline)
                 
                 DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                     .labelsHidden()
+                }
                 
+                VStack(alignment: .leading, spacing: 0) {
                 Text("Desired amount of sleep")
                     .font(.headline)
                 Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                }
                 
+                VStack(alignment: .leading, spacing: 0) {
                 Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 0...20)
-                
+                }
                     .alert(alertTitle, isPresented: $showingAlert) {
                         Button("Ok") { }
                     } message: {
@@ -72,5 +86,11 @@ struct ContentView: View {
             alertMessage = "Sorry, there was a problem calculating your bedtime"
         }
         showingAlert = true
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
